@@ -1,23 +1,30 @@
-import logo from './logo.svg';
 import './App.css';
+import React,{useState} from 'react';
+import axios from 'axios'
 
 function App() {
+   
+  const [data,setData]=useState({})
+  const [location,setlocation]=useState('')
+
+
+  const url=`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=afff540ba535de2bc2a0bbb88f8ec89b`
+
+  const searchLocation=(event)=>{
+    if(event.key==='Enter'){
+      axios.get(url).then((Response)=>{
+           setData(Response.data)
+           console.log(Response.data)
+      })
+      setlocation('')
+    }
+
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+           <input placeholder='Enter City Name' className='location' value={location} onChange={event =>setlocation(event.target.value)} onKeyPress={searchLocation}/>
+           <p className='data'>{data.name}</p>
+           {data.main ? <h2 className='data'>{(data.main.temp - 273.15).toFixed(2)}ºC</h2>:null}  
     </div>
   );
 }
